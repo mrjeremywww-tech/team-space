@@ -37,7 +37,7 @@
         .section-title { font-size: 13px; font-weight: 600; letter-spacing: 0.8px; color: var(--text-primary); text-transform: uppercase; }
         .section-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
         
-        /* New Team Schedule Table Styles */
+        /* Team Schedule Table Styles */
         .schedule-table-wrapper {
             background: var(--card-bg);
             border-radius: 16px;
@@ -122,6 +122,20 @@
             color: var(--text-secondary);
         }
         
+        .schedule-loading {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .schedule-error {
+            padding: 40px;
+            text-align: center;
+            color: #FF3B30;
+            font-size: 14px;
+        }
+        
         .announcement-cards { display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px 4px; margin: 0 -4px; scrollbar-width: none; }
         .announcement-cards::-webkit-scrollbar { display: none; }
         .announcement-card { flex: 0 0 260px; background: var(--card-bg); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
@@ -190,7 +204,7 @@
             </div>
         </section>
 
-        <!-- Team Schedule Section -->
+        <!-- Team Schedule Section - Dynamic from ICS -->
         <section class="section">
             <div class="section-header">
                 <div class="section-title">TEAM SCHEDULE</div>
@@ -207,70 +221,9 @@
                             <th class="col-activity">Activity<br><span style="font-weight:400;opacity:0.7;">活動</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="date-cell">Apr 11</td>
-                            <td class="day-cell">Fri</td>
-                            <td class="time-cell">10:00 AM - 11:30 AM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">All-Hands Meeting</div>
-                                <div class="activity-location">(Main Hall)</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date-cell">Apr 14</td>
-                            <td class="day-cell">Mon</td>
-                            <td class="time-cell">02:00 PM - 03:30 PM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">Project Alpha Review</div>
-                                <div class="activity-location">(Zoom)</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date-cell">Apr 15</td>
-                            <td class="day-cell">Tue</td>
-                            <td class="time-cell">11:00 AM - 12:00 PM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">Vendor Consultation</div>
-                                <div class="activity-location">(Conf. Room A)</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date-cell">Apr 16</td>
-                            <td class="day-cell">Wed</td>
-                            <td class="time-cell">10:00 AM - 11:30 AM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">Code Review Session</div>
-                                <div class="activity-location">(online)</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date-cell">Apr 17</td>
-                            <td class="day-cell">Thu</td>
-                            <td class="time-cell">12:30 PM - 02:00 PM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">Volunteer Activity</div>
-                                <div class="activity-location">(Park Cleaning)</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date-cell">Apr 18</td>
-                            <td class="day-cell">Fri</td>
-                            <td class="time-cell">09:00 AM - 10:30 AM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">Client Presentation</div>
-                                <div class="activity-location">(Project Beta)</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date-cell">Apr 21</td>
-                            <td class="day-cell">Mon</td>
-                            <td class="time-cell">03:00 PM - 04:30 PM</td>
-                            <td class="activity-cell">
-                                <div class="activity-title">Tech Workshop: New Frameworks</div>
-                                <div class="activity-location">(Training Room)</div>
-                            </td>
-                        </tr>
+                    <tbody id="schedule-tbody">
+                        <!-- Schedule will be loaded from ICS file -->
+                        <tr><td colspan="4" class="schedule-loading">載入日程中...⏳</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -386,7 +339,136 @@
             }
         })();
 
-        // Load image data after auth check
+        // ============================================
+        // ICS Parser - Load Schedule from .ics file
+        // ============================================
+        
+        // Parse ICS datetime (UTC format: 20260419T070000Z)
+        function parseICSDatetime(icsDate) {
+            if (!icsDate) return null;
+            const year = parseInt(icsDate.substr(0, 4));
+            const month = parseInt(icsDate.substr(4, 2)) - 1;
+            const day = parseInt(icsDate.substr(6, 2));
+            const hour = parseInt(icsDate.substr(9, 2));
+            const minute = parseInt(icsDate.substr(11, 2));
+            return new Date(Date.UTC(year, month, day, hour, minute));
+        }
+        
+        // Format date as "Apr 19"
+        function formatDate(date) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return months[date.getMonth()] + ' ' + String(date.getDate()).padStart(2, '0');
+        }
+        
+        // Format day as "Fri"
+        function formatDay(date) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return days[date.getDay()];
+        }
+        
+        // Format time as "10:00 AM - 11:30 AM"
+        function formatTime(start, end) {
+            const format = (d) => {
+                let h = d.getHours();
+                const m = String(d.getMinutes()).padStart(2, '0');
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                return h + ':' + m + ' ' + ampm;
+            };
+            return format(start) + ' - ' + format(end);
+        }
+        
+        // Parse ICS file content
+        function parseICS(icsContent) {
+            const events = [];
+            const lines = icsContent.split(/\r\n|\n/);
+            let currentEvent = null;
+            
+            for (let line of lines) {
+                if (line.startsWith('BEGIN:VEVENT')) {
+                    currentEvent = {};
+                } else if (line.startsWith('END:VEVENT')) {
+                    if (currentEvent) {
+                        events.push(currentEvent);
+                        currentEvent = null;
+                    }
+                } else if (currentEvent) {
+                    if (line.startsWith('SUMMARY:')) {
+                        currentEvent.summary = line.substring(8);
+                    } else if (line.startsWith('DTSTART:')) {
+                        currentEvent.dtstart = line.substring(8);
+                    } else if (line.startsWith('DTEND:')) {
+                        currentEvent.dtend = line.substring(6);
+                    } else if (line.startsWith('LOCATION:')) {
+                        currentEvent.location = line.substring(9);
+                    } else if (line.startsWith('DESCRIPTION:')) {
+                        currentEvent.description = line.substring(12);
+                    }
+                }
+            }
+            
+            // Sort by start date
+            return events.sort((a, b) => {
+                return parseICSDatetime(a.dtstart) - parseICSDatetime(b.dtstart);
+            });
+        }
+        
+        // Load and display schedule from ICS file
+        async function loadScheduleFromICS() {
+            const tbody = document.getElementById('schedule-tbody');
+            
+            try {
+                const response = await fetch('shenzhen_trip.ics');
+                if (!response.ok) {
+                    throw new Error('Failed to load ICS file');
+                }
+                
+                const icsContent = await response.text();
+                const events = parseICS(icsContent);
+                
+                if (events.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="schedule-error">沒有找到日程資料</td></tr>';
+                    return;
+                }
+                
+                // Generate table rows
+                let html = '';
+                for (let event of events) {
+                    const start = parseICSDatetime(event.dtstart);
+                    const end = parseICSDatetime(event.dtend);
+                    
+                    if (!start || !end) continue;
+                    
+                    const location = event.location || '';
+                    
+                    html += `
+                        <tr>
+                            <td class="date-cell">${formatDate(start)}</td>
+                            <td class="day-cell">${formatDay(start)}</td>
+                            <td class="time-cell">${formatTime(start, end)}</td>
+                            <td class="activity-cell">
+                                <div class="activity-title">${event.summary || '未定義活動'}</div>
+                                ${location ? `<div class="activity-location">(${location})</div>` : ''}
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                tbody.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading ICS:', error);
+                tbody.innerHTML = '<tr><td colspan="4" class="schedule-error">載入日程失敗，請檢查 .ics 檔案是否存在</td></tr>';
+            }
+        }
+        
+        // Load schedule when page loads
+        loadScheduleFromICS();
+
+        // ============================================
+        // Image Data Loading
+        // ============================================
+        
         const imageScript = document.createElement('script');
         imageScript.src = 'image-data.js';
         imageScript.onload = function() {
@@ -417,7 +499,7 @@
                     }, 2000);
                 });
             });
-            document.querySelectorAll('.download-btn[data-file]:not([data-file="image"])').forEach(btn => {
+            document.querySelectorAll('.download-btn[data-file]:not([data-file="image"]):not([download])').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
                     const originalText = btn.textContent;
@@ -434,7 +516,7 @@
             window.location.href = 'login.html';
         }
 
-        document.querySelectorAll('.announcement-card, .file-item, .gallery-item, .schedule-table tbody tr').forEach(item => {
+        document.querySelectorAll('.announcement-card, .file-item, .gallery-item').forEach(item => {
             item.addEventListener('click', () => {
                 item.style.transform = 'scale(0.99)';
                 setTimeout(() => item.style.transform = '', 100);
