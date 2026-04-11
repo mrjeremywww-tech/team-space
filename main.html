@@ -34,13 +34,133 @@
         .section-header { margin-bottom: 12px; }
         .section-title { font-size: 13px; font-weight: 600; letter-spacing: 0.8px; color: var(--text-primary); text-transform: uppercase; }
         .section-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-        .announcements-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px 4px; margin: 0 -4px; scrollbar-width: none; }
-        .announcements-scroll::-webkit-scrollbar { display: none; }
-        .announcement-card { flex: 0 0 280px; background: var(--card-bg); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
-        .announcement-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-        .announcement-icon { font-size: 20px; margin-bottom: 8px; }
-        .announcement-title { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 4px; }
-        .announcement-time { font-size: 12px; color: var(--text-secondary); }
+        
+        /* New Schedule/Timeline Styles */
+        .schedule-list { display: flex; flex-direction: column; gap: 16px; }
+        
+        .schedule-item {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .schedule-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        
+        .schedule-content {
+            display: flex;
+            padding: 16px;
+            gap: 16px;
+        }
+        
+        /* Date Column */
+        .date-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            padding-right: 16px;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .date-day {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            line-height: 1;
+        }
+        
+        .date-month {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        
+        .date-time {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            padding: 2px 6px;
+            background: rgba(0,122,255,0.08);
+            border-radius: 8px;
+        }
+        
+        /* Event Details */
+        .event-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .event-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+        
+        .event-location {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .event-location svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-secondary);
+        }
+        
+        .event-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            background: rgba(0,122,255,0.08);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 4px;
+            width: fit-content;
+        }
+        
+        /* Multi-event indicator */
+        .same-date-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .same-date-group .schedule-item {
+            margin-left: 0;
+        }
+        
+        .same-date-group .schedule-item:first-child .date-column {
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .same-date-group .schedule-item:not(:first-child) .date-column {
+            border-right: 1px solid transparent;
+        }
+        
+        .same-date-group .schedule-item:not(:first-child) .date-day,
+        .same-date-group .schedule-item:not(:first-child) .date-month {
+            opacity: 0;
+        }
+        
         .files-list { display: flex; flex-direction: column; gap: 10px; }
         .file-item { display: flex; align-items: center; background: var(--card-bg); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
         .file-item:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
@@ -80,27 +200,106 @@
     </header>
 
     <div class="container">
-        <!-- Announcements -->
+        <!-- Schedule/Announcements Section -->
         <section class="section">
             <div class="section-header">
-                <div class="section-title">ANNOUNCEMENTS</div>
-                <div class="section-subtitle">消息發放</div>
+                <div class="section-title">SCHEDULE</div>
+                <div class="section-subtitle">活動日程</div>
             </div>
-            <div class="announcements-scroll">
-                <div class="announcement-card">
-                    <div class="announcement-icon">🔥</div>
-                    <div class="announcement-title">Weekly Sync Meeting: Friday @ 10 AM (Conference Room A)</div>
-                    <div class="announcement-time">2 hours ago</div>
+            <div class="schedule-list">
+                <!-- Event 1: April 11 -->
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="date-column">
+                            <div class="date-day">11</div>
+                            <div class="date-month">APR</div>
+                            <div class="date-time">10:00</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">Weekly Sync Meeting</div>
+                            <div class="event-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Conference Room A
+                            </div>
+                            <div class="event-tag">🔥 重要會議</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="announcement-card">
-                    <div class="announcement-icon">📁</div>
-                    <div class="announcement-title">Please Review: Project Alpha Q3 Report Draft now available</div>
-                    <div class="announcement-time">5 hours ago</div>
+                
+                <!-- Event 2: Same day (April 11) -->
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="date-column">
+                            <div class="date-day">11</div>
+                            <div class="date-month">APR</div>
+                            <div class="date-time">14:30</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">Project Alpha Review</div>
+                            <div class="event-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Meeting Room B
+                            </div>
+                            <div class="event-tag">📁 項目評審</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="announcement-card">
-                    <div class="announcement-icon">🎉</div>
-                    <div class="announcement-title">Welcome Ben! Join us for team lunch on Thursday</div>
-                    <div class="announcement-time">1 day ago</div>
+                
+                <!-- Event 3: April 12 -->
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="date-column">
+                            <div class="date-day">12</div>
+                            <div class="date-month">APR</div>
+                            <div class="date-time">12:00</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">Welcome Lunch for Ben</div>
+                            <div class="event-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Central Park BBQ Area
+                            </div>
+                            <div class="event-tag">🎉 團隊活動</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 4: Same day (April 12) afternoon -->
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="date-column">
+                            <div class="date-day">12</div>
+                            <div class="date-month">APR</div>
+                            <div class="date-time">15:00</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">Q3 Planning Session</div>
+                            <div class="event-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Online - Zoom
+                            </div>
+                            <div class="event-tag">📊 季度規劃</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 5: April 15 -->
+                <div class="schedule-item">
+                    <div class="schedule-content">
+                        <div class="date-column">
+                            <div class="date-day">15</div>
+                            <div class="date-month">APR</div>
+                            <div class="date-time">09:00</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">All Hands Meeting</div>
+                            <div class="event-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                Main Auditorium
+                            </div>
+                            <div class="event-tag">🔥 全員大會</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -262,7 +461,7 @@
         }
 
         // Interactions
-        document.querySelectorAll('.announcement-card, .file-item, .gallery-item').forEach(item => {
+        document.querySelectorAll('.schedule-item, .file-item, .gallery-item').forEach(item => {
             item.addEventListener('click', () => {
                 item.style.transform = 'scale(0.98)';
                 setTimeout(() => item.style.transform = '', 150);
