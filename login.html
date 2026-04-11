@@ -471,7 +471,7 @@
                 
                 if (now - sessionData.timestamp < maxAge) {
                     // Valid session, redirect to main page
-                    window.location.href = 'index.html';
+                    window.location.href = 'main.html';
                     return true;
                 } else {
                     // Expired, clear storage
@@ -528,7 +528,7 @@
                     }
                     
                     // Redirect to main page
-                    window.location.href = 'index.html';
+                    window.location.href = 'main.html';
                 } else {
                     // Show error
                     passwordInput.classList.add('error');

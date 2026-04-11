@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TEAM SPACE</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #FAFAF8; --card-bg: #FFFFFF; --text-primary: #1C1C1E;
+            --text-secondary: #8E8E93; --text-tertiary: #C7C7CC; --accent-blue: #007AFF;
+            --border-color: #E5E5EA; --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color); color: var(--text-primary);
+            line-height: 1.5; padding-bottom: 100px;
+        }
+        .header {
+            position: sticky; top: 0;
+            background: rgba(250,250,248,0.95); backdrop-filter: blur(20px);
+            z-index: 100; padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(229,229,234,0.5);
+        }
+        .header-title { font-size: 17px; font-weight: 600; letter-spacing: 0.5px; }
+        .notification-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; transition: background 0.2s; }
+        .notification-btn:hover { background: rgba(0,0,0,0.05); }
+        .notification-btn svg { width: 22px; height: 22px; stroke: var(--text-primary); }
+        .notification-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: #FF3B30; border-radius: 50%; border: 2px solid var(--bg-color); }
+        .container { padding: 20px; }
+        .section { margin-bottom: 28px; }
+        .section-header { margin-bottom: 12px; }
+        .section-title { font-size: 13px; font-weight: 600; letter-spacing: 0.8px; color: var(--text-primary); text-transform: uppercase; }
+        .section-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .announcements-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px 4px; margin: 0 -4px; scrollbar-width: none; }
+        .announcements-scroll::-webkit-scrollbar { display: none; }
+        .announcement-card { flex: 0 0 280px; background: var(--card-bg); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .announcement-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .announcement-icon { font-size: 20px; margin-bottom: 8px; }
+        .announcement-title { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 4px; }
+        .announcement-time { font-size: 12px; color: var(--text-secondary); }
+        .files-list { display: flex; flex-direction: column; gap: 10px; }
+        .file-item { display: flex; align-items: center; background: var(--card-bg); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .file-item:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+        .file-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 12px; flex-shrink: 0; }
+        .file-icon.pdf { background: #FFE5E5; }
+        .file-icon.excel { background: #E5F5E5; }
+        .file-icon.word { background: #E5EFFF; }
+        .file-info { flex: 1; min-width: 0; }
+        .file-name { font-size: 15px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-size { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .download-btn { padding: 8px 16px; background: transparent; border: 1px solid var(--border-color); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: all 0.2s; flex-shrink: 0; text-decoration: none; display: inline-flex; align-items: center; }
+        .download-btn:hover { background: var(--text-primary); color: white; border-color: var(--text-primary); }
+        .gallery-grid { column-count: 2; column-gap: 10px; }
+        .gallery-item { break-inside: avoid; margin-bottom: 10px; border-radius: 12px; overflow: hidden; background: var(--card-bg); box-shadow: var(--shadow); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .gallery-item:hover { transform: scale(1.02); box-shadow: var(--shadow-hover); }
+        .gallery-item img { width: 100%; height: auto; display: block; }
+        .gallery-item.landscape { column-span: 2; }
+        .gallery-caption { padding: 10px 12px; font-size: 13px; font-weight: 500; color: var(--text-primary); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(229,229,234,0.5); padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; padding: 6px 20px; cursor: pointer; transition: opacity 0.2s; }
+        .nav-item:hover { opacity: 0.7; }
+        .nav-item svg { width: 24px; height: 24px; stroke: var(--text-secondary); fill: none; stroke-width: 1.8; transition: all 0.2s; }
+        .nav-item.active svg { stroke: var(--text-primary); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .section { animation: fadeInUp 0.5s ease forwards; }
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-title">TEAM SPACE</div>
+        <div class="notification-btn">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3C10.5 3 9.3 4.2 9.3 5.7V6C6.3 6.6 4 9.3 4 12.5V17L2 19V20H22V19L20 17V12.5C20 9.3 17.7 6.6 14.7 6V5.7C14.7 4.2 13.5 3 12 3Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21H14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="notification-dot"></span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Announcements -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title">ANNOUNCEMENTS</div>
+                <div class="section-subtitle">消息發放</div>
+            </div>
+            <div class="announcements-scroll">
+                <div class="announcement-card">
+                    <div class="announcement-icon">🔥</div>
+                    <div class="announcement-title">Weekly Sync Meeting: Friday @ 10 AM (Conference Room A)</div>
+                    <div class="announcement-time">2 hours ago</div>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcement-icon">📁</div>
+                    <div class="announcement-title">Please Review: Project Alpha Q3 Report Draft now available</div>
+                    <div class="announcement-time">5 hours ago</div>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcement-icon">🎉</div>
+                    <div class="announcement-title">Welcome Ben! Join us for team lunch on Thursday</div>
+                    <div class="announcement-time">1 day ago</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Files -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title">FILES</div>
+                <div class="section-subtitle">檔案下載</div>
+            </div>
+            <div class="files-list">
+                <div class="file-item">
+                    <div class="file-icon pdf">📄</div>
+                    <div class="file-info">
+                        <div class="file-name">Marketing_Presentation.pdf</div>
+                        <div class="file-size">1.2 MB</div>
+                    </div>
+                    <a href="#" class="download-btn" data-file="pdf">DOWNLOAD</a>
+                </div>
+                <div class="file-item">
+                    <div class="file-icon excel">📊</div>
+                    <div class="file-info">
+                        <div class="file-name">Q3_Goals.xlsx</div>
+                        <div class="file-size">850 KB</div>
+                    </div>
+                    <a href="#" class="download-btn" data-file="excel">DOWNLOAD</a>
+                </div>
+                <div class="file-item">
+                    <div class="file-icon word">📝</div>
+                    <div class="file-info">
+                        <div class="file-name">Product_Spec.docx</div>
+                        <div class="file-size">2.1 MB</div>
+                    </div>
+                    <a href="#" class="download-btn" data-file="word">DOWNLOAD</a>
+                </div>
+                <div class="file-item">
+                    <div class="file-icon" style="background: #E8F5E9;">🖼️</div>
+                    <div class="file-info">
+                        <div class="file-name">Test_Image.jpg</div>
+                        <div class="file-size">測試圖片下載</div>
+                    </div>
+                    <a href="#" class="download-btn" data-file="image">DOWNLOAD</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title">GALLERY</div>
+                <div class="section-subtitle">相片提供</div>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item landscape">
+                    <img data-image="test" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect fill='%23f0f0f0' width='600' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-family='sans-serif' font-size='16'%3E載入中...%3C/text%3E%3C/svg%3E" alt="測試圖片">
+                    <div class="gallery-caption">測試圖片 - 勵志森林</div>
+                </div>
+                <div class="gallery-item landscape">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=300&fit=crop" alt="Company Offsite">
+                    <div class="gallery-caption">Company Offsite 2023</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=300&h=400&fit=crop" alt="Team">
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&h=250&fit=crop" alt="Party">
+                    <div class="gallery-caption">Holiday Party</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 9L12 2L21 9V20C21 20.5 20.8 21 20.4 21.4C20 21.8 19.5 22 19 22H5C4.5 22 4 21.8 3.6 21.4C3.2 21 3 20.5 3 20V9Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 22V12H15V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M14.5 2H6C5.5 2 5 2.2 4.6 2.6C4.2 3 4 3.5 4 4V20C4 20.5 4.2 21 4.6 21.4C5 21.8 5.5 22 6 22H18C18.5 22 19 21.8 19.4 21.4C19.8 21 20 20.5 20 20V7.5L14.5 2Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-item">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/><path d="M21 15L16 10L5 21" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-item" onclick="logout()" title="登出">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5C4.5 21 4 20.8 3.6 20.4C3.2 20 3 19.5 3 19V5C3 4.5 3.2 4 3.6 3.6C4 3.2 4.5 3 5 3H9" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17L21 12L16 7" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+    </nav>
+
+    <script>
+        // Auth check
+        const SESSION_KEY = 'teamSpace_session';
+        const REMEMBER_KEY = 'teamSpace_remember';
+        
+        (function checkAuth() {
+            const session = localStorage.getItem(SESSION_KEY);
+            if (!session) { window.location.href = 'login.html'; return; }
+            const sessionData = JSON.parse(session);
+            const now = new Date().getTime();
+            const REMEMBER_DAYS = 30;
+            const maxAge = localStorage.getItem(REMEMBER_KEY) ? (REMEMBER_DAYS * 24 * 60 * 60 * 1000) : (60 * 60 * 1000);
+            if (now - sessionData.timestamp >= maxAge) {
+                localStorage.removeItem(SESSION_KEY);
+                localStorage.removeItem(REMEMBER_KEY);
+                window.location.href = 'login.html';
+            }
+        })();
+
+        // Load image data after auth check
+        const imageScript = document.createElement('script');
+        imageScript.src = 'image-data.js';
+        imageScript.onload = function() {
+            // Update gallery image
+            const galleryImg = document.querySelector('.gallery-item.landscape img[data-image="test"]');
+            if (galleryImg && typeof TEST_IMAGE_BASE64 !== 'undefined') {
+                galleryImg.src = TEST_IMAGE_BASE64;
+            }
+            // Update download links for image
+            document.querySelectorAll('.download-btn[data-file="image"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (typeof TEST_IMAGE_BASE64 === 'undefined') return;
+                    const link = document.createElement('a');
+                    link.href = TEST_IMAGE_BASE64;
+                    link.download = 'Test_Image.jpg';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    // Show success feedback
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓';
+                    btn.style.background = '#34C759';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#34C759';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.style.color = '';
+                        btn.style.borderColor = '';
+                    }, 2000);
+                });
+            });
+            // Other files show "coming soon" feedback
+            document.querySelectorAll('.download-btn[data-file]:not([data-file="image"])').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const originalText = btn.textContent;
+                    btn.textContent = '即將推出';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 1500);
+                });
+            });
+        };
+        document.head.appendChild(imageScript);
+
+        function logout() {
+            localStorage.removeItem('teamSpace_session');
+            localStorage.removeItem('teamSpace_remember');
+            window.location.href = 'login.html';
+        }
+
+        // Interactions
+        document.querySelectorAll('.announcement-card, .file-item, .gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.style.transform = 'scale(0.98)';
+                setTimeout(() => item.style.transform = '', 150);
+            });
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (!item.getAttribute('onclick')) {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
