@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TEAM SPACE - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #FAFAF8;
+            --card-bg: #FFFFFF;
+            --text-primary: #1C1C1E;
+            --text-secondary: #8E8E93;
+            --text-tertiary: #C7C7CC;
+            --accent-blue: #007AFF;
+            --border-color: #E5E5EA;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --error-red: #FF3B30;
+            --success-green: #34C759;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+        }
+
+        .logo-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .logo-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        /* Login Card */
+        .login-card {
+            width: 100%;
+            max-width: 360px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 14px 44px 14px 16px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: var(--accent-blue);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .password-input.error {
+            border-color: var(--error-red);
+            background: rgba(255, 59, 48, 0.05);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .toggle-password:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 1.8;
+        }
+
+        /* Remember Me */
+        .remember-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding: 4px 0;
+        }
+
+        .remember-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .remember-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .remember-checkbox.checked {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .remember-checkbox svg {
+            width: 12px;
+            height: 12px;
+            stroke: white;
+            stroke-width: 2.5;
+            display: none;
+        }
+
+        .remember-checkbox.checked svg {
+            display: block;
+        }
+
+        .remember-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            user-select: none;
+        }
+
+        .remember-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .login-btn:disabled {
+            background: var(--text-tertiary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(255, 59, 48, 0.08);
+            border-radius: 10px;
+            margin-bottom: 16px;
+            animation: shake 0.4s ease;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .error-icon {
+            width: 18px;
+            height: 18px;
+            background: var(--error-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .error-icon svg {
+            width: 10px;
+            height: 10px;
+            stroke: white;
+            stroke-width: 2.5;
+        }
+
+        .error-text {
+            font-size: 13px;
+            color: var(--error-red);
+        }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 32px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        .spinner.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo Section -->
+    <div class="logo-section">
+        <div class="logo-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="logo-title">TEAM SPACE</div>
+        <div class="logo-subtitle">團隊協作空間</div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+        <div class="login-title">歡迎回來</div>
+        <div class="login-subtitle">請輸入密碼以繼續</div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            <div class="error-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <span class="error-text">密碼不正確，請再試一次</span>
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+            <label class="input-label">PASSWORD / 密碼</label>
+            <div class="password-wrapper">
+                <input 
+                    type="password" 
+                    class="password-input" 
+                    id="passwordInput" 
+                    placeholder="請輸入密碼"
+                    autocomplete="current-password"
+                >
+                <button class="toggle-password" id="togglePassword" type="button">
+                    <svg id="eyeIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <svg id="eyeOffIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="1" y1="1" x2="23" y2="23" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="remember-section">
+            <label class="remember-label" id="rememberLabel">
+                <div class="remember-checkbox" id="rememberCheckbox">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polyline points="20 6 9 17 4 12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="remember-text">記住密碼</span>
+            </label>
+            <span class="remember-hint">30 天</span>
+        </div>
+
+        <!-- Login Button -->
+        <button class="login-btn" id="loginBtn">
+            <span id="btnText">登入</span>
+            <div class="spinner" id="btnSpinner"></div>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+        <span class="footer-text">© 2025 TEAM SPACE. All rights reserved.</span>
+    </div>
+
+    <script>
+        // Configuration
+        const CORRECT_PASSWORD = 'tribunal';
+        const REMEMBER_DAYS = 30;
+        const SESSION_KEY = 'teamSpace_session';
+        const REMEMBER_KEY = 'teamSpace_remember';
+
+        // DOM Elements
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const eyeOffIcon = document.getElementById('eyeOffIcon');
+        const rememberCheckbox = document.getElementById('rememberCheckbox');
+        const rememberLabel = document.getElementById('rememberLabel');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let isRememberChecked = false;
+
+        // Check if already logged in
+        function checkExistingSession() {
+            const session = localStorage.getItem(SESSION_KEY);
+            const remember = localStorage.getItem(REMEMBER_KEY);
+            
+            if (session) {
+                const sessionData = JSON.parse(session);
+                const now = new Date().getTime();
+                
+                // Check if session is still valid (30 days for remembered, 1 hour for not remembered)
+                const maxAge = remember ? (REMEMBER_DAYS * 24 * 60 * 60 * 1000) : (60 * 60 * 1000);
+                
+                if (now - sessionData.timestamp < maxAge) {
+                    // Valid session, redirect to main page
+                    window.location.href = 'index.html';
+                    return true;
+                } else {
+                    // Expired, clear storage
+                    localStorage.removeItem(SESSION_KEY);
+                    localStorage.removeItem(REMEMBER_KEY);
+                }
+            }
+            return false;
+        }
+
+        // Toggle password visibility
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            eyeIcon.style.display = isPassword ? 'none' : 'block';
+            eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+        });
+
+        // Toggle remember me
+        rememberLabel.addEventListener('click', (e) => {
+            if (e.target.closest('.toggle-password')) return;
+            isRememberChecked = !isRememberChecked;
+            rememberCheckbox.classList.toggle('checked', isRememberChecked);
+        });
+
+        // Login function
+        function doLogin() {
+            const password = passwordInput.value.trim();
+            
+            // Reset error state
+            passwordInput.classList.remove('error');
+            errorMessage.classList.remove('show');
+            
+            // Show loading
+            btnText.style.display = 'none';
+            btnSpinner.classList.add('show');
+            loginBtn.disabled = true;
+            
+            // Simulate small delay for better UX
+            setTimeout(() => {
+                if (password === CORRECT_PASSWORD) {
+                    // Create session
+                    const sessionData = {
+                        authenticated: true,
+                        timestamp: new Date().getTime()
+                    };
+                    localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+                    
+                    // Save remember preference
+                    if (isRememberChecked) {
+                        localStorage.setItem(REMEMBER_KEY, 'true');
+                    } else {
+                        localStorage.removeItem(REMEMBER_KEY);
+                    }
+                    
+                    // Redirect to main page
+                    window.location.href = 'index.html';
+                } else {
+                    // Show error
+                    passwordInput.classList.add('error');
+                    errorMessage.classList.add('show');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    
+                    // Reset button
+                    btnText.style.display = 'block';
+                    btnSpinner.classList.remove('show');
+                    loginBtn.disabled = false;
+                }
+            }, 400);
+        }
+
+        // Login button click
+        loginBtn.addEventListener('click', doLogin);
+
+        // Enter key to submit
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                doLogin();
+            }
+        });
+
+        // Auto-check session on load
+        if (checkExistingSession()) {
+            // Already redirected, do nothing
+        } else {
+            // Focus password input
+            passwordInput.focus();
+        }
+    </script>
+</body>
+</html>
