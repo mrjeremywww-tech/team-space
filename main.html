@@ -136,12 +136,59 @@
             font-size: 14px;
         }
         
-        .announcement-cards { display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px 4px; margin: 0 -4px; scrollbar-width: none; }
-        .announcement-cards::-webkit-scrollbar { display: none; }
-        .announcement-card { flex: 0 0 260px; background: var(--card-bg); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .announcement-cards { display: flex; flex-direction: column; gap: 12px; }
+        .announcement-card { background: var(--card-bg); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
         .announcement-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
         .announcement-icon { font-size: 18px; margin-bottom: 6px; }
-        .announcement-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+        .announcement-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 8px; }
+        .announcement-content { 
+            font-size: 13px; 
+            color: var(--text-primary); 
+            line-height: 1.6;
+            max-height: 88px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .announcement-content.expanded {
+            max-height: 500px;
+        }
+        .announcement-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .announcement-content li {
+            padding: 4px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .expand-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: var(--header-bg);
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .expand-btn:hover {
+            background: rgba(0,122,255,0.1);
+        }
+        .expand-btn svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+        }
+        .expand-btn.expanded svg {
+            transform: rotate(180deg);
+        }
         
         .files-list { display: flex; flex-direction: column; gap: 10px; }
         .file-item { display: flex; align-items: center; background: var(--card-bg); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
@@ -191,15 +238,53 @@
             <div class="announcement-cards">
                 <div class="announcement-card">
                     <div class="announcement-icon">📲</div>
-                    <div class="announcement-title">行程日曆如何匯入手機？直接從下面DOWNLOAD下載檔案點擊DOWNLOAD會出現「匯入手機日程」提示。如果已下載了檔案可以操作如下：• iPhone (iOS)： 將此檔案透過 AirDrop、Email 或訊息傳給自己，點開檔案後，手機會詢問是否「加入日曆」或「全部加入」。• Android / Google 日曆： 1. 將檔案傳到手機，點擊檔案並選擇用「日曆」開啟。2. 或者在電腦瀏覽器打開 Google 日曆設定，點擊「匯入」，然後上傳這個檔案，所有行程就會同步到手機。</div>
+                    <div class="announcement-title">行程日曆如何匯入手機？</div>
+                    <div class="announcement-content" id="announcement-1">
+                        <ul>
+                            <li data-emoji="📥">直接從下面 DOWNLOAD 下載檔案</li>
+                            <li data-emoji="📱">點擊後會出現「匯入手機日程」提示</li>
+                            <li data-emoji="🍎">iPhone (iOS)：透過 AirDrop / Email 傳給自己，點開後選擇「加入日曆」</li>
+                            <li data-emoji="🤖">Android：將檔案傳到手機，用「日曆」開啟</li>
+                            <li data-emoji="💻">或在電腦 Google 日曆設定點擊「匯入」上傳檔案</li>
+                        </ul>
+                    </div>
+                    <button class="expand-btn" onclick="toggleAnnouncement('announcement-1', this)">
+                        展開 More
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
                 </div>
                 <div class="announcement-card">
                     <div class="announcement-icon">📁</div>
-                    <div class="announcement-title">Project Alpha Q3 Report Draft now available</div>
+                    <div class="announcement-title">培訓資料更新</div>
+                    <div class="announcement-content" id="announcement-2">
+                        <ul>
+                            <li data-emoji="📄">Q3 培訓講義已上傳</li>
+                            <li data-emoji="📊">請到 FILES 區域下載最新資料</li>
+                            <li data-emoji="📅">行程日曆檔案可匯入手機</li>
+                            <li data-emoji="⚠️">所有資料僅供本次培訓使用</li>
+                        </ul>
+                    </div>
+                    <button class="expand-btn" onclick="toggleAnnouncement('announcement-2', this)">
+                        展開 More
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
                 </div>
                 <div class="announcement-card">
                     <div class="announcement-icon">🎉</div>
-                    <div class="announcement-title">Welcome Ben! Join us for team lunch</div>
+                    <div class="announcement-title">深圳培訓班即將出發</div>
+                    <div class="announcement-content" id="announcement-3">
+                        <ul>
+                            <li data-emoji="📅">出發日期：2026年4月19日</li>
+                            <li data-emoji="🕒">集合時間：下午3:00</li>
+                            <li data-emoji="📍">集合地點：澳門（詳見日程表）</li>
+                            <li data-emoji="🚌">交通：巴士直達深圳</li>
+                            <li data-emoji="🏨">住宿：深圳酒店（已安排）</li>
+                        </ul>
+                    </div>
+                    <button class="expand-btn" onclick="toggleAnnouncement('announcement-3', this)">
+                        展開 More
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
                 </div>
             </div>
         </section>
@@ -517,6 +602,22 @@
             localStorage.removeItem('teamSpace_session');
             localStorage.removeItem('teamSpace_remember');
             window.location.href = 'login.html';
+        }
+
+        // Toggle announcement expand/collapse
+        function toggleAnnouncement(contentId, btn) {
+            const content = document.getElementById(contentId);
+            const isExpanded = content.classList.contains('expanded');
+            
+            if (isExpanded) {
+                content.classList.remove('expanded');
+                btn.classList.remove('expanded');
+                btn.innerHTML = '展開 More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>';
+            } else {
+                content.classList.add('expanded');
+                btn.classList.add('expanded');
+                btn.innerHTML = '收合 Less <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>';
+            }
         }
 
         document.querySelectorAll('.announcement-card, .file-item, .gallery-item').forEach(item => {
