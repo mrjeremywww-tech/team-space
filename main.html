@@ -136,8 +136,9 @@
             font-size: 14px;
         }
         
-        .announcement-cards { display: flex; flex-direction: column; gap: 12px; }
-        .announcement-card { background: var(--card-bg); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
+        .announcement-cards { display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px 4px; margin: 0 -4px; scrollbar-width: none; }
+        .announcement-cards::-webkit-scrollbar { display: none; }
+        .announcement-card { flex: 0 0 280px; background: var(--card-bg); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
         .announcement-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
         .announcement-icon { font-size: 18px; margin-bottom: 6px; }
         .announcement-title { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 8px; }
@@ -145,12 +146,12 @@
             font-size: 13px; 
             color: var(--text-primary); 
             line-height: 1.6;
-            max-height: 88px;
+            max-height: 62px;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
         .announcement-content.expanded {
-            max-height: 500px;
+            max-height: 400px;
         }
         .announcement-content ul {
             list-style: none;
@@ -158,7 +159,7 @@
             margin: 0;
         }
         .announcement-content li {
-            padding: 4px 0;
+            padding: 3px 0;
             display: flex;
             align-items: flex-start;
             gap: 6px;
@@ -167,7 +168,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            margin-top: 10px;
+            margin-top: 8px;
             padding: 6px 12px;
             background: var(--header-bg);
             border: none;
