@@ -325,42 +325,10 @@
                 <div class="file-item">
                     <div class="file-icon" style="background: #FFF3E0;">📅</div>
                     <div class="file-info">
-                        <div class="file-name">Shenzhen_Trip.ics</div>
+                        <div class="file-name">Training_Schedule_v3.ics</div>
                         <div class="file-size">下載日曆檔案到iPhone/Android日曆</div>
                     </div>
-                    <a href="shenzhen_trip.ics" class="download-btn" download>DOWNLOAD</a>
-                </div>
-                <div class="file-item">
-                    <div class="file-icon pdf">📄</div>
-                    <div class="file-info">
-                        <div class="file-name">Marketing_Presentation.pdf</div>
-                        <div class="file-size">1.2 MB</div>
-                    </div>
-                    <a href="#" class="download-btn" data-file="pdf">DOWNLOAD</a>
-                </div>
-                <div class="file-item">
-                    <div class="file-icon excel">📊</div>
-                    <div class="file-info">
-                        <div class="file-name">Q3_Goals.xlsx</div>
-                        <div class="file-size">850 KB</div>
-                    </div>
-                    <a href="#" class="download-btn" data-file="excel">DOWNLOAD</a>
-                </div>
-                <div class="file-item">
-                    <div class="file-icon word">📝</div>
-                    <div class="file-info">
-                        <div class="file-name">Product_Spec.docx</div>
-                        <div class="file-size">2.1 MB</div>
-                    </div>
-                    <a href="#" class="download-btn" data-file="word">DOWNLOAD</a>
-                </div>
-                <div class="file-item">
-                    <div class="file-icon" style="background: #E8F5E9;">🖼️</div>
-                    <div class="file-info">
-                        <div class="file-name">Test_Image.jpg</div>
-                        <div class="file-size">測試圖片下載</div>
-                    </div>
-                    <a href="#" class="download-btn" data-file="image">DOWNLOAD</a>
+                    <a href="training_schedule_v3.ics" class="download-btn" download>DOWNLOAD</a>
                 </div>
             </div>
         </section>
@@ -370,23 +338,6 @@
             <div class="section-header">
                 <div class="section-title">GALLERY</div>
                 <div class="section-subtitle">相片提供</div>
-            </div>
-            <div class="gallery-grid">
-                <div class="gallery-item landscape">
-                    <img data-image="test" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3Crect fill='%23f0f0f0' width='600' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-family='sans-serif' font-size='16'%3E載入中...%3C/text%3E%3C/svg%3E" alt="測試圖片">
-                    <div class="gallery-caption">測試圖片 - 勵志森林</div>
-                </div>
-                <div class="gallery-item landscape">
-                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=300&fit=crop" alt="Company Offsite">
-                    <div class="gallery-caption">Company Offsite 2023</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=300&h=400&fit=crop" alt="Team">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&h=250&fit=crop" alt="Party">
-                    <div class="gallery-caption">Holiday Party</div>
-                </div>
             </div>
             <div style="margin-top: 16px; padding: 12px 16px; background: #FFF3E0; border-radius: 12px; border-left: 4px solid #FF9800; font-size: 13px; color: #E65100; line-height: 1.5;">
                 ⚠️ 所有活動相片僅供本次培訓班同事下載及個人使用，未經同意不得用於公開場合
@@ -507,7 +458,7 @@
             const tbody = document.getElementById('schedule-tbody');
             
             try {
-                const response = await fetch('shenzhen_trip.ics');
+                const response = await fetch('training_schedule_v3.ics');
                 if (!response.ok) {
                     throw new Error('Failed to load ICS file');
                 }
