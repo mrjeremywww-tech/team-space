@@ -19,7 +19,7 @@ team-space/
 
 1. 訪問 https://mrjeremywww-tech.github.io/team-space/
 2. 自動跳轉到登入頁面
-3. 輸入密碼：`tribunal`
+3. 輸入密碼：
 4. 開始使用！
 
 ## 🔐 登入系統
