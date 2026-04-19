@@ -304,24 +304,22 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                 </div>
-                <div class="announcement-card">
-                    <div class="announcement-icon">🚌</div>
-                    <div class="announcement-title">接送車輛資訊</div>
-                    <div class="announcement-content" id="announcement-5">
-                        <ul>
-                            <li data-emoji="🚗">4月19日（澳門→深圳）</li>
-                            <li data-emoji="🔢">車牌：MQ3237</li>
-                            <li data-emoji="👤">司機：沈繼宏 63721883</li>
-                            <li data-emoji="🚙">4月20-24日（深圳行程）</li>
-                            <li data-emoji="🔢">車牌：粤B35765D</li>
-                            <li data-emoji="👤">司機：胡治芳 19287453314</li>
-                        </ul>
-                    </div>
-                    <button class="expand-btn" onclick="toggleAnnouncement('announcement-5', this)">
-                        展開 More
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                </div>
+            </div>
+        </section>
+
+        <!-- Attendance App Launcher -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-title">ATTENDANCE</div>
+                <div class="section-subtitle">現場統計</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 24px; text-align: center; color: white; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                <div style="font-size: 42px; margin-bottom: 12px;">👥</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">統計人數程序</div>
+                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 20px;">現場即時報到統計</div>
+                <button onclick="window.location.href='attendance.html'" style="background: #FFD93D; color: #333; border: none; padding: 14px 40px; font-size: 16px; font-weight: 600; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: transform 0.2s;">
+                    開始統計
+                </button>
             </div>
         </section>
 
@@ -399,6 +397,9 @@
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="scrollToTop()" title="回到頂部">
             <svg viewBox="0 0 24 24"><path d="M3 9L12 2L21 9V20C21 20.5 20.8 21 20.4 21.4C20 21.8 19.5 22 19 22H5C4.5 22 4 21.8 3.6 21.4C3.2 21 3 20.5 3 20V9Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 22V12H15V22" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-item" onclick="window.location.href='attendance.html'" title="統計人數">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M18 21v-2a4 4 0 0 0-4-4H10a4 4 0 0 0-4 4v2"/></svg>
         </div>
         <div class="nav-item" onclick="scrollToSection('files-section')" title="檔案下載">
             <svg viewBox="0 0 24 24"><path d="M14.5 2H6C5.5 2 5 2.2 4.6 2.6C4.2 3 4 3.5 4 4V20C4 20.5 4.2 21 4.6 21.4C5 21.8 5.5 22 6 22H18C18.5 22 19 21.8 19.4 21.4C19.8 21 20 20.5 20 20V7.5L14.5 2Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20" stroke-linecap="round" stroke-linejoin="round"/></svg>

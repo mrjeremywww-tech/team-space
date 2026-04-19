@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>統計人數程序</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #87CEEB;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 關閉按鈕 */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .close-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* 標題 */
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 50px;
+            margin-bottom: 15px;
+        }
+        
+        /* 開始統計按鈕 */
+        .start-btn {
+            background: #FFD93D;
+            color: #333;
+            border: none;
+            padding: 12px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        
+        .start-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        
+        .start-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* 已報到人數 */
+        .count-display {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.8);
+            padding: 10px 25px;
+            border-radius: 20px;
+        }
+        
+        .count-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        
+        /* 按鈕網格 */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 360px;
+            margin-bottom: 30px;
+        }
+        
+        .person-btn {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: none;
+            background: #FF6B9D;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            line-height: 1.2;
+        }
+        
+        .person-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .person-btn.present {
+            background: #4CAF50;
+        }
+        
+        .person-btn .number {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .person-btn .name {
+            font-size: 9px;
+            text-align: center;
+            word-break: break-all;
+            max-width: 100%;
+        }
+        
+        /* 確認彈窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 85%;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .modal-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .modal-btn.cancel {
+            background: #E0E0E0;
+            color: #333;
+        }
+        
+        .modal-btn.confirm {
+            background: #FF6B6B;
+            color: white;
+        }
+        
+        /* 未開始時遮罩 */
+        .not-started {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(135,206,235,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        
+        .not-started.hidden {
+            display: none;
+        }
+        
+        .not-started-text {
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 關閉按鈕 -->
+    <button class="close-btn" onclick="confirmClose()">×</button>
+    
+    <!-- 未開始遮罩 -->
+    <div class="not-started" id="notStartedMask">
+        <div class="title">統計人數程序</div>
+        <button class="start-btn" onclick="startAttendance()">開始統計</button>
+        <div class="not-started-text">請點擊「開始統計」開始報到</div>
+    </div>
+    
+    <!-- 主要內容 -->
+    <div class="title">統計人數程序</div>
+    <button class="start-btn" id="startBtn" onclick="startAttendance()" disabled>統計中...</button>
+    
+    <div class="count-display">
+        已報到人數：<span class="count-number" id="countDisplay">0</span>
+    </div>
+    
+    <div class="buttons-grid" id="buttonsGrid"></div>
+    
+    <!-- 確認彈窗 -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-title">確認關閉？</div>
+            <div class="modal-text">關閉後當前統計資料將不會保存，確定要離開嗎？</div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="cancelClose()">取消</button>
+                <button class="modal-btn confirm" onclick="doClose()">確認離開</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 26人名單
+        const participants = [
+            { num: 1, name: '龔俊銘' },
+            { num: 2, name: '梅淑賢' },
+            { num: 3, name: '梁皓然' },
+            { num: 4, name: '鄺偉業' },
+            { num: 5, name: '李文富' },
+            { num: 6, name: '曾潔琼' },
+            { num: 7, name: '黃樹培' },
+            { num: 8, name: '施玉燕' },
+            { num: 9, name: '蔡鴻陽' },
+            { num: 10, name: '吳桂安' },
+            { num: 11, name: '潘雪瓔' },
+            { num: 12, name: '姚伯全' },
+            { num: 13, name: '譚柳詩' },
+            { num: 14, name: '梁家满' },
+            { num: 15, name: '黃嘉欣' },
+            { num: 16, name: '譚兆寶' },
+            { num: 17, name: '黃國錚' },
+            { num: 18, name: '蔡廉安' },
+            { num: 19, name: '馬志豪' },
+            { num: 20, name: '黃維' },
+            { num: 21, name: '陳頴姿' },
+            { num: 22, name: '麥浩恩' },
+            { num: 23, name: '黎偉斌' },
+            { num: 24, name: '徐偉漢' },
+            { num: 25, name: '陳麗緹' },
+            { num: 26, name: '黃永健' }
+        ];
+        
+        let attendanceStarted = false;
+        let presentCount = 0;
+        let personStates = new Array(26).fill(false);
+        
+        // 初始化按鈕
+        function initButtons() {
+            const grid = document.getElementById('buttonsGrid');
+            grid.innerHTML = '';
+            
+            participants.forEach((person, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'person-btn';
+                btn.innerHTML = `
+                    <span class="number">${person.num}</span>
+                    <span class="name">${person.name}</span>
+                `;
+                btn.onclick = () => togglePerson(index, btn);
+                grid.appendChild(btn);
+            });
+        }
+        
+        // 開始統計
+        function startAttendance() {
+            attendanceStarted = true;
+            document.getElementById('notStartedMask').classList.add('hidden');
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('startBtn').textContent = '統計中...';
+            
+            // 重置所有狀態
+            presentCount = 0;
+            personStates.fill(false);
+            updateCount();
+            
+            // 重置所有按鈕樣式
+            document.querySelectorAll('.person-btn').forEach(btn => {
+                btn.classList.remove('present');
+            });
+        }
+        
+        // 切換人員報到狀態
+        function togglePerson(index, btn) {
+            if (!attendanceStarted) return;
+            
+            personStates[index] = !personStates[index];
+            
+            if (personStates[index]) {
+                btn.classList.add('present');
+                presentCount++;
+            } else {
+                btn.classList.remove('present');
+                presentCount--;
+            }
+            
+            updateCount();
+        }
+        
+        // 更新人數顯示
+        function updateCount() {
+            document.getElementById('countDisplay').textContent = presentCount;
+        }
+        
+        // 確認關閉
+        function confirmClose() {
+            if (!attendanceStarted) {
+                doClose();
+                return;
+            }
+            document.getElementById('confirmModal').classList.add('show');
+        }
+        
+        // 取消關閉
+        function cancelClose() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+        
+        // 執行關閉
+        function doClose() {
+            window.location.href = 'main.html';
+        }
+        
+        // 初始化
+        initButtons();
+    </script>
+</body>
+</html>
