@@ -87,6 +87,25 @@
             background: var(--row-alt-bg);
         }
         
+        .schedule-table tbody tr.in-progress {
+            background: #E8D5E8;
+        }
+        
+        .schedule-table tbody tr.in-progress .in-progress-badge {
+            display: inline-block;
+        }
+        
+        .in-progress-badge {
+            display: none;
+            background: #FF3B30;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+        
         .schedule-table .col-date { width: 18%; }
         .schedule-table .col-day { width: 15%; }
         .schedule-table .col-time { width: 32%; }
@@ -527,6 +546,7 @@
                 }
                 
                 // Generate table rows
+                const now = new Date();
                 let html = '';
                 for (let event of events) {
                     const start = parseICSDatetime(event.dtstart);
@@ -535,10 +555,13 @@
                     if (!start || !end) continue;
                     
                     const location = event.location || '';
+                    const isInProgress = now >= start && now <= end;
+                    const rowClass = isInProgress ? 'in-progress' : '';
+                    const badgeHtml = isInProgress ? '<span class="in-progress-badge">正在進行</span>' : '';
                     
                     html += `
-                        <tr>
-                            <td class="date-cell">${formatDate(start)}</td>
+                        <tr class="${rowClass}">
+                            <td class="date-cell">${formatDate(start)}${badgeHtml}</td>
                             <td class="day-cell">${formatDay(start)}</td>
                             <td class="time-cell">${formatTime(start, end)}</td>
                             <td class="activity-cell">
